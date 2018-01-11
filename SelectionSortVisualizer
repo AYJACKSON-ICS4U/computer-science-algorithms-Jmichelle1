@@ -1,0 +1,148 @@
+var arrayNumber;
+//seperate quadrants for arrays
+stroke(128, 23, 23);
+line(0, 200, 400, 200);
+line(200, 0, 200, 400);
+fill(0, 0, 0);
+
+//function to display the arrays
+var displayArray = function(array, unsortedArrayIndex, minIndex) {
+    //declaring var for length of array to minIndex
+    var arrayString1;
+    //set first position of array in the distance to the minIndex
+    arrayString1 = array[0].toString();
+    for( var j = 0; j <= minIndex - 1; j++){
+        //declaring var
+        var arrayString2;
+        //add next number in string to array
+        arrayString2 = array[j+1].toString();
+        //add , to string
+        arrayString1 += ",";
+        //join strings
+        arrayString1 = arrayString1.concat(arrayString2);
+    }
+    //declaring var for length of array to unsorted position #1
+    var arrayString3;
+    //set first position of array in the distance to the index to be swapped to
+    arrayString3 = array[0].toString();
+    for( var i = 0; i <= unsortedArrayIndex - 1; i++){
+        //declaring var
+        var arrayString4;
+        //add next number in string to array
+        arrayString4 = array[i+1].toString();
+        //add , to string
+        arrayString3 += ",";
+        //join strings
+        arrayString3 = arrayString3.concat(arrayString4);
+    }
+    
+    //output the array
+    textFont(createFont("monospace"), 12);
+    //output 1st array
+    if(arrayNumber===1){
+        line(arrayString1.length*7, unsortedArrayIndex*24+13, arrayString3.length*7, unsortedArrayIndex*24+26);
+        text (array, 10, (unsortedArrayIndex+1.5)*24);
+    }
+    //output second array
+    else if(arrayNumber===2){
+        line(arrayString1.length*7+200, unsortedArrayIndex*24+13, arrayString3.length*7+200, unsortedArrayIndex*24+26);
+        text (array, 208, (unsortedArrayIndex+1.5)*24);
+    }
+    //output third array
+    else if(arrayNumber===3){
+        line(arrayString1.length*7, unsortedArrayIndex*24+213, arrayString3.length*7, unsortedArrayIndex*24+226);
+        text (array, 6, (unsortedArrayIndex+1.5)*24+200);
+    }
+    //output fourth array
+    else if(arrayNumber===4){
+        line(arrayString1.length*7+200, unsortedArrayIndex*24+213, arrayString3.length*7+200, unsortedArrayIndex*24+226);
+        text (array, 207, (unsortedArrayIndex+1.5)*24+200);
+    }
+};
+
+//function to swap the positions of the lowest number and the index of the position
+var swap = function(array, unsortedArrayIndex, minIndex) {
+    //Capture value of minimum value in temp storage
+    var temp = array[minIndex];
+    //Set value of index of min to value of array[unsorted array index]
+    array[minIndex] = array[unsortedArrayIndex];
+    //Set value of array[unsorted array index] to temp storage
+    array[unsortedArrayIndex] = temp;
+};
+
+//function to find the lowest value in the sub array
+var indexOfMinimum = function(array, unsortedArrayIndex) {
+    //declare var
+    //minValue holds value of the unsortedArray's first position [0], will end up holding smallest value
+    var minValue = array[unsortedArrayIndex];
+    //holds the index of the smallest value (starts at first position
+    var minIndex = unsortedArrayIndex;
+    
+    //find smallest value by comparing current smallest to values to the right of it until it hits the end of the array
+    for(var i = minIndex + 1; i < array.length; i++) {
+        if(array[i] < minValue) {
+            minIndex = i;
+            minValue = array[i];
+        }
+    } 
+    //return the position of the smallest value of the subarray
+    return minIndex;
+}; 
+
+//function to call the others to start the selection sort
+var selectionSort = function(array) {
+    //declaring var for position of lowest value
+    var minIndex;
+    var unsortedArrayIndex = 0;
+    
+    //unsortedArrayIndex is the index where the unsorted part of the array starts
+    //loop until entire array is sorted(1 less than the array length
+    for(unsortedArrayIndex = 0; unsortedArrayIndex < array.length; unsortedArrayIndex++) {
+        //call function to find the index of the smallest value
+        minIndex = indexOfMinimum(array, unsortedArrayIndex);
+        //call function to swap the lowest value and the unsorted array index
+        swap(array, unsortedArrayIndex, minIndex);
+        //call function to display array
+        displayArray(array, unsortedArrayIndex, minIndex);
+    }
+};
+
+//first array
+arrayNumber=1;
+var array = [22, 11, 99, 88, 9, 7, 42];
+//display original array
+textFont(createFont("monospace"), 12);
+text(array, 10, 12);
+//start sorting from least to greatest
+selectionSort(array);
+Program.assertEqual(array, [7, 9, 11, 22, 42, 88, 99]);
+
+//second array
+arrayNumber=2;
+var array2 = [78, 62, 50, 15, 13, 9, 6];
+//display original array
+textFont(createFont("monospace"), 12);
+text(array2, 207, 12);
+//start sorting
+selectionSort(array2);
+Program.assertEqual(array2, [6, 9, 13, 15, 50, 62, 78]);
+
+//third array
+arrayNumber=3;
+var array3 = [18, 27, 30, 27, 7, 18, 6];
+//display original array
+textFont(createFont("monospace"), 12);
+text(array3, 6, 211);
+//start sorting
+selectionSort(array3);
+Program.assertEqual(array3, [6, 7, 18, 18, 27, 27, 30]);
+
+//fourth array
+arrayNumber=4;
+var array4 = [6, 8, 13, 17, 26, 40, 35];
+//display original array
+textFont(createFont("monospace"), 12);
+text(array4, 205, 210);
+//start sorting
+selectionSort(array4);
+Program.assertEqual(array4, [6, 8, 13, 17, 26, 35, 40]);
